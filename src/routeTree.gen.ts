@@ -10,33 +10,219 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ActivateBpcRouteImport } from './routes/activate-bpc'
+import { Route as AirtimeRouteImport } from './routes/airtime'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DataRouteImport } from './routes/data'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as KycRouteImport } from './routes/kyc'
+import { Route as LandingRouteImport } from './routes/landing'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as WithdrawRouteImport } from './routes/withdraw'
+import { Route as ApiPublicBpcAdminRouteImport } from './routes/api/public/bpc-admin'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActivateBpcRoute = ActivateBpcRouteImport.update({
+  id: '/activate-bpc',
+  path: '/activate-bpc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AirtimeRoute = AirtimeRouteImport.update({
+  id: '/airtime',
+  path: '/airtime',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DataRoute = DataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KycRoute = KycRouteImport.update({
+  id: '/kyc',
+  path: '/kyc',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WithdrawRoute = WithdrawRouteImport.update({
+  id: '/withdraw',
+  path: '/withdraw',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicBpcAdminRoute = ApiPublicBpcAdminRouteImport.update({
+  id: '/api/public/bpc-admin',
+  path: '/api/public/bpc-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activate-bpc': typeof ActivateBpcRoute
+  '/airtime': typeof AirtimeRoute
+  '/dashboard': typeof DashboardRoute
+  '/data': typeof DataRoute
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/kyc': typeof KycRoute
+  '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activate-bpc': typeof ActivateBpcRoute
+  '/airtime': typeof AirtimeRoute
+  '/dashboard': typeof DashboardRoute
+  '/data': typeof DataRoute
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/kyc': typeof KycRoute
+  '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activate-bpc': typeof ActivateBpcRoute
+  '/airtime': typeof AirtimeRoute
+  '/dashboard': typeof DashboardRoute
+  '/data': typeof DataRoute
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/kyc': typeof KycRoute
+  '/landing': typeof LandingRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
+  '/support': typeof SupportRoute
+  '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activate-bpc'
+    | '/airtime'
+    | '/dashboard'
+    | '/data'
+    | '/faq'
+    | '/forgot-password'
+    | '/kyc'
+    | '/landing'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/support'
+    | '/withdraw'
+    | '/api/public/bpc-admin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/activate-bpc'
+    | '/airtime'
+    | '/dashboard'
+    | '/data'
+    | '/faq'
+    | '/forgot-password'
+    | '/kyc'
+    | '/landing'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/support'
+    | '/withdraw'
+    | '/api/public/bpc-admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/activate-bpc'
+    | '/airtime'
+    | '/dashboard'
+    | '/data'
+    | '/faq'
+    | '/forgot-password'
+    | '/kyc'
+    | '/landing'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/support'
+    | '/withdraw'
+    | '/api/public/bpc-admin'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivateBpcRoute: typeof ActivateBpcRoute
+  AirtimeRoute: typeof AirtimeRoute
+  DashboardRoute: typeof DashboardRoute
+  DataRoute: typeof DataRoute
+  FaqRoute: typeof FaqRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  KycRoute: typeof KycRoute
+  LandingRoute: typeof LandingRoute
+  LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
+  SupportRoute: typeof SupportRoute
+  WithdrawRoute: typeof WithdrawRoute
+  ApiPublicBpcAdminRoute: typeof ApiPublicBpcAdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +234,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/activate-bpc': {
+      id: '/activate-bpc'
+      path: '/activate-bpc'
+      fullPath: '/activate-bpc'
+      preLoaderRoute: typeof ActivateBpcRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/airtime': {
+      id: '/airtime'
+      path: '/airtime'
+      fullPath: '/airtime'
+      preLoaderRoute: typeof AirtimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/data': {
+      id: '/data'
+      path: '/data'
+      fullPath: '/data'
+      preLoaderRoute: typeof DataRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kyc': {
+      id: '/kyc'
+      path: '/kyc'
+      fullPath: '/kyc'
+      preLoaderRoute: typeof KycRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/withdraw': {
+      id: '/withdraw'
+      path: '/withdraw'
+      fullPath: '/withdraw'
+      preLoaderRoute: typeof WithdrawRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/bpc-admin': {
+      id: '/api/public/bpc-admin'
+      path: '/api/public/bpc-admin'
+      fullPath: '/api/public/bpc-admin'
+      preLoaderRoute: typeof ApiPublicBpcAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivateBpcRoute: ActivateBpcRoute,
+  AirtimeRoute: AirtimeRoute,
+  DashboardRoute: DashboardRoute,
+  DataRoute: DataRoute,
+  FaqRoute: FaqRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  KycRoute: KycRoute,
+  LandingRoute: LandingRoute,
+  LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
+  SupportRoute: SupportRoute,
+  WithdrawRoute: WithdrawRoute,
+  ApiPublicBpcAdminRoute: ApiPublicBpcAdminRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
