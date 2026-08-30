@@ -17,6 +17,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 
+import { verifyIdentityFn } from "@/lib/backend.functions";
 type KycStatus = "not_verified" | "pending" | "verified" | "failed";
 type Kind = "nin" | "bvn";
 
