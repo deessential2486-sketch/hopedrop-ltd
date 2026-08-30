@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Shield, Copy, Upload, Clock, XCircle, Star, Crown, Check, Info, Loader2, CheckCircle2, Mail, Send } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { notifyBpcSubmissionFn } from "@/lib/backend.functions";
 
 const SUPPORT_EMAIL = "bluepay9e@gmail.com";
 

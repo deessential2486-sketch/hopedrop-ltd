@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { notifyBpcSubmissionFn } from "@/lib/backend.functions";
 
 interface Profile {
   fullName: string;
@@ -157,9 +158,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Notify admin via edge function
     try {
-      await notifyBpcSubmissionFn({
-        body: { submissionId: data.id },
-      });
+      await notifyBpcSubmissionFn({ data: { submissionId: data.id } });
     } catch (e) {
       console.error("Failed to notify admin:", e);
     }
