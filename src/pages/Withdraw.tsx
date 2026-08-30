@@ -33,11 +33,9 @@ const Withdraw = () => {
   useEffect(() => {
     let active = true;
     (async () => {
-      const { data, error } = await supabase.functions.invoke("resolve-account", {
-        body: { action: "banks" },
-      });
+      const data = await listBanksFn().catch(() => ({ error: "failed" }) as const);
       if (!active) return;
-      if (error || !data?.banks) {
+      if (!("banks" in data)) {
         setVerifyError("Could not load bank list. Please try again.");
       } else {
         setBanks(data.banks as Bank[]);
@@ -54,11 +52,11 @@ const Withdraw = () => {
     setVerifyError("");
     setAccountName("");
     setConfirmed(false);
-    const { data, error } = await supabase.functions.invoke("resolve-account", {
-      body: { action: "resolve", bank_code: code, account_number: number },
-    });
+    const data = await resolveAccountFn({
+      data: { bank_code: code, account_number: number },
+    }).catch(() => ({ error: "failed" }) as const);
     setVerifying(false);
-    if (error || !data?.account_name) {
+    if (!("account_name" in data)) {
       setVerifyError("Invalid account number for selected bank.");
       return;
     }

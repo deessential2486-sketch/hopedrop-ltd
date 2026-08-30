@@ -98,15 +98,13 @@ const KYC = () => {
     }
     setSubmitting(true);
     try {
-      const { data, error: fnError } = await supabase.functions.invoke("kyc-verify", {
-        body: { kind, id: value, consent: true },
-      });
+      const data = await verifyIdentityFn({ data: { kind, id: value, consent: true } }).catch(
+        () => ({ error: "We could not complete verification. Please try again." }),
+      );
       // Clear the sensitive value from memory as soon as it has been sent.
       setValue("");
 
-      const message =
-        (data as { error?: string } | null)?.error ??
-        (fnError ? "We could not complete verification. Please try again." : "");
+      const message = (data as { error?: string } | null)?.error ?? "";
 
       if (message) {
         setError(message);

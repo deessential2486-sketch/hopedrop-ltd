@@ -157,7 +157,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Notify admin via edge function
     try {
-      await supabase.functions.invoke("bpc-admin", {
+      await notifyBpcSubmissionFn({
         body: { submissionId: data.id },
       });
     } catch (e) {

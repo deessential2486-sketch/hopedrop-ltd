@@ -40,10 +40,8 @@ const ActivateBPC = () => {
         .limit(1)
         .maybeSingle();
       if (subErr || !sub) throw new Error("No receipt found to resend.");
-      const { error: fnErr } = await supabase.functions.invoke("bpc-admin", {
-        body: { submissionId: sub.id },
-      });
-      if (fnErr) throw new Error(fnErr.message);
+      const res = await notifyBpcSubmissionFn({ data: { submissionId: sub.id } });
+      if ("error" in res) throw new Error(res.error);
       setResendMsg({ type: "success", text: "Receipt email resent successfully." });
     } catch (e: any) {
       setResendMsg({ type: "error", text: e.message || "Failed to resend receipt email." });
