@@ -23,6 +23,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as WithdrawRouteImport } from './routes/withdraw'
+import { Route as ApiPublicBpcAdminRouteImport } from './routes/api/public/bpc-admin'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const WithdrawRoute = WithdrawRouteImport.update({
   path: '/withdraw',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicBpcAdminRoute = ApiPublicBpcAdminRouteImport.update({
+  id: '/api/public/bpc-admin',
+  path: '/api/public/bpc-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
+  '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/support'
     | '/withdraw'
+    | '/api/public/bpc-admin'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/support'
     | '/withdraw'
+    | '/api/public/bpc-admin'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/support'
     | '/withdraw'
+    | '/api/public/bpc-admin'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   SupportRoute: typeof SupportRoute
   WithdrawRoute: typeof WithdrawRoute
+  ApiPublicBpcAdminRoute: typeof ApiPublicBpcAdminRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WithdrawRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/bpc-admin': {
+      id: '/api/public/bpc-admin'
+      path: '/api/public/bpc-admin'
+      fullPath: '/api/public/bpc-admin'
+      preLoaderRoute: typeof ApiPublicBpcAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   SupportRoute: SupportRoute,
   WithdrawRoute: WithdrawRoute,
+  ApiPublicBpcAdminRoute: ApiPublicBpcAdminRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
