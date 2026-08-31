@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -21,7 +21,10 @@ import { verifyIdentityFn } from "@/lib/backend.functions";
 type KycStatus = "not_verified" | "pending" | "verified" | "failed";
 type Kind = "nin" | "bvn";
 
-const STATUS_META: Record<KycStatus, { label: string; className: string; icon: JSX.Element }> = {
+const STATUS_META: Record<
+  KycStatus,
+  { label: string; className: string; icon: ReactElement }
+> = {
   not_verified: {
     label: "Not Verified",
     className: "bg-secondary text-secondary-foreground",
