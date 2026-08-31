@@ -11,8 +11,8 @@ import { notifyBpcSubmissionFn } from "@/lib/backend.functions";
 const SUPPORT_EMAIL = "bluepay9e@gmail.com";
 
 const PAY_LINKS = {
-  "5k": "https://pay.payswitch.africa/pay/62cb0abe-8909-43bc-ac71-1b0a3f5ed519",
-  "10k": "https://pay.payswitch.africa/pay/43006d0f-1a64-405e-9df7-5976ff8b78f2",
+  "5k": "https://paystack.shop/pay/dzwibsb5iv",
+  "10k": "https://paystack.shop/pay/x4irk6wekv",
 } as const;
 
 const ActivateBPC = () => {
