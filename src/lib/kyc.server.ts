@@ -106,7 +106,7 @@ export async function verifyIdentity(
       [statusCol]: "verified",
       [verifiedCol]: new Date().toISOString(),
       verification_tier: tier,
-    })
+    } as never)
     .eq("user_id", userId);
 
   if (updateError) return { error: "Could not save your verification. Please retry." };
