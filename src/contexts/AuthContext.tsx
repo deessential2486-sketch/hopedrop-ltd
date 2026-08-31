@@ -20,6 +20,7 @@ export interface KycState {
   tier: 0 | 1 | 2;
   nin: KycStatus;
   bvn: KycStatus;
+  face: KycStatus;
   ninVerifiedAt: string | null;
   bvnVerifiedAt: string | null;
 }
@@ -28,6 +29,7 @@ const EMPTY_KYC: KycState = {
   tier: 0,
   nin: "not_verified",
   bvn: "not_verified",
+  face: "not_verified",
   ninVerifiedAt: null,
   bvnVerifiedAt: null,
 };
@@ -82,6 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       tier: ((profile as any)?.verification_tier ?? 0) as 0 | 1 | 2,
       nin: ((profile as any)?.nin_verification_status ?? "not_verified") as KycStatus,
       bvn: ((profile as any)?.bvn_verification_status ?? "not_verified") as KycStatus,
+      face: ((profile as any)?.face_verification_status ?? "not_verified") as KycStatus,
       ninVerifiedAt: (profile as any)?.nin_verified_at ?? null,
       bvnVerifiedAt: (profile as any)?.bvn_verified_at ?? null,
     });
