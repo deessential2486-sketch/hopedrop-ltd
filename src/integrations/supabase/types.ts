@@ -110,6 +110,9 @@ export type Database = {
           bvn_verification_status: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at: string | null
           created_at: string
+          face_selfie_path: string | null
+          face_verification_status: Database["public"]["Enums"]["kyc_status"]
+          face_verified_at: string | null
           full_name: string
           id: string
           nin_verification_status: Database["public"]["Enums"]["kyc_status"]
@@ -125,6 +128,9 @@ export type Database = {
           bvn_verification_status?: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at?: string | null
           created_at?: string
+          face_selfie_path?: string | null
+          face_verification_status?: Database["public"]["Enums"]["kyc_status"]
+          face_verified_at?: string | null
           full_name?: string
           id?: string
           nin_verification_status?: Database["public"]["Enums"]["kyc_status"]
@@ -140,6 +146,9 @@ export type Database = {
           bvn_verification_status?: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at?: string | null
           created_at?: string
+          face_selfie_path?: string | null
+          face_verification_status?: Database["public"]["Enums"]["kyc_status"]
+          face_verified_at?: string | null
           full_name?: string
           id?: string
           nin_verification_status?: Database["public"]["Enums"]["kyc_status"]
