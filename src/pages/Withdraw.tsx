@@ -72,6 +72,7 @@ const Withdraw = () => {
     setAccountName("");
     setConfirmed(false);
     setVerifyError("");
+    return undefined;
   }, [bankCode, accountNumber, verify]);
 
   if (loading || !user) return null;
