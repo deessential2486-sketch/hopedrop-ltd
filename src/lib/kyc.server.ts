@@ -71,7 +71,7 @@ export async function verifyIdentity(
   const statusCol = kind === "nin" ? "nin_verification_status" : "bvn_verification_status";
   const verifiedCol = kind === "nin" ? "nin_verified_at" : "bvn_verified_at";
 
-  await supabaseAdmin.from("profiles").update({ [statusCol]: "pending" }).eq("user_id", userId);
+  await supabaseAdmin.from("profiles").update({ [statusCol]: "pending" } as never).eq("user_id", userId);
 
   let result;
   try {
@@ -94,7 +94,7 @@ export async function verifyIdentity(
   });
 
   if (!result.ok) {
-    await supabaseAdmin.from("profiles").update({ [statusCol]: "failed" }).eq("user_id", userId);
+    await supabaseAdmin.from("profiles").update({ [statusCol]: "failed" } as never).eq("user_id", userId);
     return { error: result.message, retryable: result.retryable, status: "failed" };
   }
 
