@@ -21,7 +21,10 @@ import { verifyIdentityFn } from "@/lib/backend.functions";
 type KycStatus = "not_verified" | "pending" | "verified" | "failed";
 type Kind = "nin" | "bvn";
 
-const STATUS_META: Record<KycStatus, { label: string; className: string; icon: JSX.Element }> = {
+const STATUS_META: Record<
+  KycStatus,
+  { label: string; className: string; icon: React.ReactElement }
+> = {
   not_verified: {
     label: "Not Verified",
     className: "bg-secondary text-secondary-foreground",
