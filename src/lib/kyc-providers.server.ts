@@ -5,7 +5,12 @@
 export type KycKind = "nin" | "bvn";
 
 export type KycResult =
-  | { ok: true; reference?: string; firstName?: string; lastName?: string }
+  | {
+      ok: true;
+      reference?: string | undefined;
+      firstName?: string | undefined;
+      lastName?: string | undefined;
+    }
   | { ok: false; message: string; retryable: boolean };
 
 export interface KycProvider {
