@@ -15,9 +15,11 @@ import {
   XCircle,
   Clock,
   ShieldAlert,
+  ScanFace,
 } from "lucide-react";
 
 import { verifyIdentityFn } from "@/lib/backend.functions";
+import FaceScan from "@/components/FaceScan";
 type KycStatus = "not_verified" | "pending" | "verified" | "failed";
 type Kind = "nin" | "bvn";
 
@@ -64,6 +66,7 @@ const KYC = () => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState<Kind | null>(null);
+  const [faceOpen, setFaceOpen] = useState(false);
   const [value, setValue] = useState("");
   const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -77,6 +80,7 @@ const KYC = () => {
   if (loading || !user) return null;
 
   const tier = kyc.tier;
+  const faceStatus = kyc.face;
   const ninStatus = kyc.nin;
   const bvnStatus = kyc.bvn;
   const progress = tier === 2 ? 100 : tier === 1 ? 50 : 0;
@@ -279,12 +283,46 @@ const KYC = () => {
           )}
         </div>
 
+        <section className="bg-card rounded-2xl p-5 shadow-sm border border-border">
+          <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2">
+              <ScanFace className="w-5 h-5 text-primary" aria-hidden="true" />
+              <div>
+                <h2 className="font-semibold text-foreground">Face Verification</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Live selfie &amp; liveness check</p>
+              </div>
+            </div>
+            <StatusBadge status={faceStatus} />
+          </div>
+
+          <p className="text-sm text-muted-foreground mt-3">
+            Scan your face so we can confirm you are a real person and not someone using your
+            details. Your camera stays on this device — we only keep one selfie for compliance.
+          </p>
+
+          {faceStatus === "verified" ? null : faceOpen ? (
+            <FaceScan
+              onVerified={async () => {
+                setFaceOpen(false);
+                setSuccess("Face verified. You can now complete NIN verification.");
+                await refreshKyc();
+              }}
+              onCancel={() => setFaceOpen(false)}
+            />
+          ) : (
+            <Button className="mt-4 w-full sm:w-auto" onClick={() => { setError(""); setSuccess(""); setFaceOpen(true); }}>
+              {faceStatus === "failed" ? "Retry Face Scan" : "Start Face Scan"}
+            </Button>
+          )}
+        </section>
+
         <TierCard
           kind="nin"
           title="Tier 1 — NIN Verification"
           subtitle="National Identification Number"
           status={ninStatus}
-          locked={false}
+          locked={faceStatus !== "verified"}
+          lockedNote="Complete your face scan first to unlock NIN verification."
           explanation="We verify your NIN to confirm you are a real, identifiable person. This is required by Nigerian financial regulations and protects your account from fraud and impersonation."
         />
 
