@@ -241,7 +241,7 @@ const ActivateBPC = () => {
                     </p>
                   </div>
                   <Label htmlFor="proof-confirm" className="sr-only">Upload proof of payment file</Label>
-                  <ReceiptStatus status={submitStatus} fileName={proofFile?.name} errorMessage={error} />
+                  <ReceiptStatus status={submitStatus} fileName={proofFile?.name ?? ""} errorMessage={error} />
                   <div
                     className="border-2 border-dashed border-border rounded-xl p-4 text-center"
                     aria-describedby="proof-desc-confirm"
