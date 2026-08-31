@@ -42,3 +42,13 @@ export const verifyIdentityFn = createServerFn({ method: "POST" })
     const { verifyIdentity } = await import("./kyc.server");
     return verifyIdentity(context.userId, data.kind, data.id, data.consent);
   });
+
+export const verifyFaceFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { frames: string[] }) => ({
+    frames: Array.isArray(data?.frames) ? data.frames.map(String) : [],
+  }))
+  .handler(async ({ data, context }) => {
+    const { verifyFace } = await import("./face.server");
+    return verifyFace(context.userId, data.frames);
+  });
