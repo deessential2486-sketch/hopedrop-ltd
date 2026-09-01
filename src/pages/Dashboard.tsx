@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "@/lib/router-compat";
 import { useEffect } from "react";
-import { Wallet, ArrowDownCircle, Shield, User, LogOut, Phone, Wifi, HelpCircle, HeadphonesIcon, ShieldCheck } from "lucide-react";
+import { Wallet, ArrowDownCircle, Shield, User, LogOut, Phone, Wifi, HelpCircle, HeadphonesIcon, ShieldCheck, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
