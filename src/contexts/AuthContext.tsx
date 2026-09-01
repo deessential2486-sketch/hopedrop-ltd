@@ -8,7 +8,9 @@ interface Profile {
   email: string;
   phone: string;
   balance: number;
+  referralId: string;
 }
+
 
 interface BpcStatus {
   status: "none" | "pending" | "approved" | "declined";
