@@ -86,7 +86,9 @@ const Dashboard = () => {
           <ActionCard icon={<HelpCircle className="w-6 h-6" />} label="FAQ" onClick={() => navigate("/faq")} />
           <ActionCard icon={<HeadphonesIcon className="w-6 h-6" />} label="Support" onClick={() => navigate("/support")} />
           <ActionCard icon={<ShieldCheck className="w-6 h-6" />} label="Verify Account" onClick={() => navigate("/kyc")} />
+          <ActionCard icon={<Gift className="w-6 h-6" />} label="Invite & Earn" onClick={() => navigate("/referrals")} />
           <ActionCard icon={<User className="w-6 h-6" />} label="Profile" onClick={() => navigate("/profile")} />
+
         </div>
 
         <div className="mt-6 bg-card rounded-2xl p-5 shadow-sm border border-border">
