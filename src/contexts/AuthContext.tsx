@@ -96,8 +96,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email,
       phone: profile?.phone || "",
       balance: Number(profile?.balance || 200000),
+      referralId: (profile as any)?.referral_id ?? "",
       status: bpcStatus,
     });
+
   };
 
   useEffect(() => {
