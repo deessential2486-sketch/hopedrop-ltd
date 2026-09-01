@@ -20,6 +20,7 @@ import { Route as KycRouteImport } from './routes/kyc'
 import { Route as LandingRouteImport } from './routes/landing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as WithdrawRouteImport } from './routes/withdraw'
@@ -80,6 +81,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReferralsRoute = ReferralsRouteImport.update({
+  id: '/referrals',
+  path: '/referrals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
+  '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
   '/withdraw': typeof WithdrawRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/login'
     | '/profile'
+    | '/referrals'
     | '/register'
     | '/support'
     | '/withdraw'
@@ -184,6 +194,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/login'
     | '/profile'
+    | '/referrals'
     | '/register'
     | '/support'
     | '/withdraw'
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/landing'
     | '/login'
     | '/profile'
+    | '/referrals'
     | '/register'
     | '/support'
     | '/withdraw'
@@ -219,6 +231,7 @@ export interface RootRouteChildren {
   LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
+  ReferralsRoute: typeof ReferralsRoute
   RegisterRoute: typeof RegisterRoute
   SupportRoute: typeof SupportRoute
   WithdrawRoute: typeof WithdrawRoute
@@ -304,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/referrals': {
+      id: '/referrals'
+      path: '/referrals'
+      fullPath: '/referrals'
+      preLoaderRoute: typeof ReferralsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -347,6 +367,7 @@ const rootRouteChildren: RootRouteChildren = {
   LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
+  ReferralsRoute: ReferralsRoute,
   RegisterRoute: RegisterRoute,
   SupportRoute: SupportRoute,
   WithdrawRoute: WithdrawRoute,

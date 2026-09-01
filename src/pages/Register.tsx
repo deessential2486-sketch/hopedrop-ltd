@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -12,10 +12,16 @@ const Register = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [referralCode, setReferralCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const ref = new URLSearchParams(window.location.search).get("ref");
+    if (ref) setReferralCode(ref.trim().toUpperCase());
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +35,7 @@ const Register = () => {
     }
     setLoading(true);
     setError("");
-    const err = await register(fullName, email, phone, password);
+    const err = await register(fullName, email, phone, password, referralCode);
     setLoading(false);
     if (err) {
       setError(err);
@@ -37,6 +43,7 @@ const Register = () => {
       navigate("/dashboard");
     }
   };
+
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-background px-5 py-10">
@@ -74,6 +81,11 @@ const Register = () => {
               <Label htmlFor="confirmPassword">Confirm password</Label>
               <Input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="referralCode">Referral code (optional)</Label>
+              <Input id="referralCode" placeholder="Enter a friend's code" value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())} />
+            </div>
+
             <Button type="submit" className="w-full h-12 rounded-xl text-base font-semibold" disabled={loading}>
               {loading ? "Creating Account..." : "Create Account"}
             </Button>

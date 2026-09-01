@@ -8,7 +8,9 @@ interface Profile {
   email: string;
   phone: string;
   balance: number;
+  referralId: string;
 }
+
 
 interface BpcStatus {
   status: "none" | "pending" | "approved" | "declined";
@@ -39,7 +41,7 @@ interface AuthContextType {
   supabaseUser: SupabaseUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<string | null>;
-  register: (fullName: string, email: string, phone: string, password: string) => Promise<string | null>;
+  register: (fullName: string, email: string, phone: string, password: string, referralCode?: string) => Promise<string | null>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<string | null>;
   submitBPCProof: (proofUrl: string) => Promise<string | null>;
@@ -94,8 +96,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email,
       phone: profile?.phone || "",
       balance: Number(profile?.balance || 200000),
+      referralId: (profile as any)?.referral_id ?? "",
       status: bpcStatus,
     });
+
   };
 
   useEffect(() => {
@@ -126,15 +130,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return null;
   };
 
-  const register = async (fullName: string, email: string, phone: string, password: string): Promise<string | null> => {
+  const register = async (fullName: string, email: string, phone: string, password: string, referralCode?: string): Promise<string | null> => {
+    const referred_by = (referralCode ?? "").trim().toUpperCase();
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, phone } },
+      options: { data: { full_name: fullName, phone, ...(referred_by ? { referred_by } : {}) } },
     });
     if (error) return error.message;
     return null;
   };
+
 
   const logout = async () => {
     await supabase.auth.signOut();

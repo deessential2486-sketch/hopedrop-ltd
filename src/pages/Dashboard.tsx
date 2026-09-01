@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "@/lib/router-compat";
 import { useEffect } from "react";
-import { Wallet, ArrowDownCircle, Shield, User, LogOut, Phone, Wifi, HelpCircle, HeadphonesIcon, ShieldCheck } from "lucide-react";
+import { Wallet, ArrowDownCircle, Shield, User, LogOut, Phone, Wifi, HelpCircle, HeadphonesIcon, ShieldCheck, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Dashboard = () => {
@@ -86,7 +86,9 @@ const Dashboard = () => {
           <ActionCard icon={<HelpCircle className="w-6 h-6" />} label="FAQ" onClick={() => navigate("/faq")} />
           <ActionCard icon={<HeadphonesIcon className="w-6 h-6" />} label="Support" onClick={() => navigate("/support")} />
           <ActionCard icon={<ShieldCheck className="w-6 h-6" />} label="Verify Account" onClick={() => navigate("/kyc")} />
+          <ActionCard icon={<Gift className="w-6 h-6" />} label="Invite & Earn" onClick={() => navigate("/referrals")} />
           <ActionCard icon={<User className="w-6 h-6" />} label="Profile" onClick={() => navigate("/profile")} />
+
         </div>
 
         <div className="mt-6 bg-card rounded-2xl p-5 shadow-sm border border-border">
