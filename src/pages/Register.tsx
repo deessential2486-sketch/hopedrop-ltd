@@ -81,6 +81,11 @@ const Register = () => {
               <Label htmlFor="confirmPassword">Confirm password</Label>
               <Input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="referralCode">Referral code (optional)</Label>
+              <Input id="referralCode" placeholder="Enter a friend's code" value={referralCode} onChange={e => setReferralCode(e.target.value.toUpperCase())} />
+            </div>
+
             <Button type="submit" className="w-full h-12 rounded-xl text-base font-semibold" disabled={loading}>
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
