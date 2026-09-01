@@ -130,15 +130,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return null;
   };
 
-  const register = async (fullName: string, email: string, phone: string, password: string): Promise<string | null> => {
+  const register = async (fullName: string, email: string, phone: string, password: string, referralCode?: string): Promise<string | null> => {
+    const referred_by = (referralCode ?? "").trim().toUpperCase();
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, phone } },
+      options: { data: { full_name: fullName, phone, ...(referred_by ? { referred_by } : {}) } },
     });
     if (error) return error.message;
     return null;
   };
+
 
   const logout = async () => {
     await supabase.auth.signOut();
