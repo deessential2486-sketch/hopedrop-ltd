@@ -41,7 +41,7 @@ interface AuthContextType {
   supabaseUser: SupabaseUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<string | null>;
-  register: (fullName: string, email: string, phone: string, password: string) => Promise<string | null>;
+  register: (fullName: string, email: string, phone: string, password: string, referralCode?: string) => Promise<string | null>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<string | null>;
   submitBPCProof: (proofUrl: string) => Promise<string | null>;
