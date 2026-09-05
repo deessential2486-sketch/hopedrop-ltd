@@ -81,18 +81,14 @@ const Withdraw = () => {
 
   const bankName = banks.find((b) => b.code === bankCode)?.name ?? "";
 
-  const handleWithdraw = (e: React.FormEvent) => {
+  const activated = user.status === "approved";
+
+  const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (user.status !== "approved") {
-      if (user.status === "pending") {
-        setError("Your HD CODE activation is under review. Please wait for verification.");
-      } else if (user.status === "declined") {
-        setError("Your HD CODE activation was declined. Please re-submit a valid proof of payment.");
-      } else {
-        setError("You must activate your HD CODE before you can withdraw. Please go to Activate HD CODE.");
-      }
+    if (!activated) {
+      setError("You must activate your HD CODE before you can withdraw.");
       return;
     }
 
@@ -108,6 +104,16 @@ const Withdraw = () => {
     }
     if (num > user.balance) {
       setError("Insufficient balance");
+      return;
+    }
+
+    setSubmitting(true);
+    const res = await checkHdCodeFn({ data: { code: hdCode } }).catch(
+      () => ({ ok: false, message: "Could not check your HD CODE. Please try again." }) as const,
+    );
+    setSubmitting(false);
+    if (!res.ok) {
+      setError("message" in res ? res.message : "Incorrect HD CODE.");
       return;
     }
 
