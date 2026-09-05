@@ -254,9 +254,25 @@ const Withdraw = () => {
                 <Input id="amount" type="number" inputMode="numeric" value={amount} onChange={e => setAmount(e.target.value)} />
               </div>
 
-              <Button type="submit" className="w-full" disabled={!confirmed}>
-                Withdraw ₦{Number(amount || 0).toLocaleString()}
+              <div className="space-y-2">
+                <Label htmlFor="hdcode">HD CODE</Label>
+                <Input
+                  id="hdcode"
+                  autoComplete="off"
+                  placeholder="HD-XXXXXXXX"
+                  value={hdCode}
+                  onChange={(e) => setHdCode(e.target.value.toUpperCase())}
+                  aria-describedby="hdcode-help"
+                />
+                <p id="hdcode-help" className="text-xs text-muted-foreground">
+                  Enter the HD CODE we sent to your email after your activation was approved.
+                </p>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={!confirmed || !hdCode || submitting}>
+                {submitting ? "Checking HD CODE…" : `Withdraw ₦${Number(amount || 0).toLocaleString()}`}
               </Button>
+
 
               <p className="text-xs text-muted-foreground text-center">
                 Your account number is used only for verification and is never stored.
