@@ -4,8 +4,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, ArrowDownCircle, Loader2, CheckCircle2 } from "lucide-react";
-import { listBanksFn, resolveAccountFn } from "@/lib/backend.functions";
+import { ArrowLeft, ArrowDownCircle, Loader2, CheckCircle2, Lock } from "lucide-react";
+import { listBanksFn, resolveAccountFn, checkHdCodeFn } from "@/lib/backend.functions";
 
 type Bank = { name: string; code: string };
 
@@ -23,6 +23,8 @@ const Withdraw = () => {
   const [confirmed, setConfirmed] = useState(false);
 
   const [amount, setAmount] = useState("80000");
+  const [hdCode, setHdCode] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -79,18 +81,14 @@ const Withdraw = () => {
 
   const bankName = banks.find((b) => b.code === bankCode)?.name ?? "";
 
-  const handleWithdraw = (e: React.FormEvent) => {
+  const activated = user.status === "approved";
+
+  const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (user.status !== "approved") {
-      if (user.status === "pending") {
-        setError("Your HD CODE activation is under review. Please wait for verification.");
-      } else if (user.status === "declined") {
-        setError("Your HD CODE activation was declined. Please re-submit a valid proof of payment.");
-      } else {
-        setError("You must activate your HD CODE before you can withdraw. Please go to Activate HD CODE.");
-      }
+    if (!activated) {
+      setError("You must activate your HD CODE before you can withdraw.");
       return;
     }
 
@@ -106,6 +104,16 @@ const Withdraw = () => {
     }
     if (num > user.balance) {
       setError("Insufficient balance");
+      return;
+    }
+
+    setSubmitting(true);
+    const res = await checkHdCodeFn({ data: { code: hdCode } }).catch(
+      () => ({ ok: false, message: "Could not check your HD CODE. Please try again." }) as const,
+    );
+    setSubmitting(false);
+    if (!res.ok) {
+      setError("message" in res ? res.message : "Incorrect HD CODE.");
       return;
     }
 
@@ -134,6 +142,26 @@ const Withdraw = () => {
               ₦{Number(amount).toLocaleString()} is being sent to {accountName} ({bankName} - {accountNumber}). Please allow 24-48 hours for processing.
             </p>
             <Button onClick={() => navigate("/dashboard")} className="w-full">Back to Dashboard</Button>
+          </div>
+        ) : !activated ? (
+          <div className="bg-card rounded-2xl p-6 shadow-lg border border-border text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-secondary mx-auto flex items-center justify-center">
+              <Lock className="w-8 h-8 text-primary" aria-hidden="true" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">Withdrawals Locked</h2>
+            <p className="text-sm text-muted-foreground">
+              {user.status === "pending"
+                ? "Your HD CODE activation is under review. Once it is approved, your HD CODE will be sent to your email and withdrawals will unlock."
+                : user.status === "declined"
+                  ? "Your HD CODE activation was declined. Please re-submit a valid proof of payment to unlock withdrawals."
+                  : "You must activate your HD CODE before you can withdraw. After approval, your HD CODE is sent to your email address."}
+            </p>
+            <Button onClick={() => navigate("/activate-bpc")} className="w-full">
+              Activate HD CODE
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/dashboard")} className="w-full">
+              Back to Dashboard
+            </Button>
           </div>
         ) : (
           <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
@@ -226,9 +254,25 @@ const Withdraw = () => {
                 <Input id="amount" type="number" inputMode="numeric" value={amount} onChange={e => setAmount(e.target.value)} />
               </div>
 
-              <Button type="submit" className="w-full" disabled={!confirmed}>
-                Withdraw ₦{Number(amount || 0).toLocaleString()}
+              <div className="space-y-2">
+                <Label htmlFor="hdcode">HD CODE</Label>
+                <Input
+                  id="hdcode"
+                  autoComplete="off"
+                  placeholder="HD-XXXXXXXX"
+                  value={hdCode}
+                  onChange={(e) => setHdCode(e.target.value.toUpperCase())}
+                  aria-describedby="hdcode-help"
+                />
+                <p id="hdcode-help" className="text-xs text-muted-foreground">
+                  Enter the HD CODE we sent to your email after your activation was approved.
+                </p>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={!confirmed || !hdCode || submitting}>
+                {submitting ? "Checking HD CODE…" : `Withdraw ₦${Number(amount || 0).toLocaleString()}`}
               </Button>
+
 
               <p className="text-xs text-muted-foreground text-center">
                 Your account number is used only for verification and is never stored.

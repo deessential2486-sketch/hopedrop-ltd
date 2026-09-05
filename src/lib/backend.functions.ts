@@ -52,3 +52,11 @@ export const verifyFaceFn = createServerFn({ method: "POST" })
     const { verifyFace } = await import("./face.server");
     return verifyFace(context.userId, data.frames);
   });
+
+export const checkHdCodeFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { code: string }) => ({ code: String(data?.code ?? "").slice(0, 32) }))
+  .handler(async ({ data, context }) => {
+    const { checkHdCode } = await import("./hdcode.server");
+    return checkHdCode(context.userId, data.code);
+  });

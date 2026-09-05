@@ -114,6 +114,7 @@ export type Database = {
           face_verification_status: Database["public"]["Enums"]["kyc_status"]
           face_verified_at: string | null
           full_name: string
+          hd_code: string | null
           id: string
           nin_verification_status: Database["public"]["Enums"]["kyc_status"]
           nin_verified_at: string | null
@@ -132,6 +133,7 @@ export type Database = {
           face_verification_status?: Database["public"]["Enums"]["kyc_status"]
           face_verified_at?: string | null
           full_name?: string
+          hd_code?: string | null
           id?: string
           nin_verification_status?: Database["public"]["Enums"]["kyc_status"]
           nin_verified_at?: string | null
@@ -150,6 +152,7 @@ export type Database = {
           face_verification_status?: Database["public"]["Enums"]["kyc_status"]
           face_verified_at?: string | null
           full_name?: string
+          hd_code?: string | null
           id?: string
           nin_verification_status?: Database["public"]["Enums"]["kyc_status"]
           nin_verified_at?: string | null
@@ -273,6 +276,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_hd_code: { Args: never; Returns: string }
       generate_referral_id: { Args: never; Returns: string }
       has_role: {
         Args: {
