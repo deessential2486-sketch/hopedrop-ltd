@@ -143,6 +143,26 @@ const Withdraw = () => {
             </p>
             <Button onClick={() => navigate("/dashboard")} className="w-full">Back to Dashboard</Button>
           </div>
+        ) : !activated ? (
+          <div className="bg-card rounded-2xl p-6 shadow-lg border border-border text-center space-y-4">
+            <div className="w-16 h-16 rounded-full bg-secondary mx-auto flex items-center justify-center">
+              <Lock className="w-8 h-8 text-primary" aria-hidden="true" />
+            </div>
+            <h2 className="text-xl font-bold text-foreground">Withdrawals Locked</h2>
+            <p className="text-sm text-muted-foreground">
+              {user.status === "pending"
+                ? "Your HD CODE activation is under review. Once it is approved, your HD CODE will be sent to your email and withdrawals will unlock."
+                : user.status === "declined"
+                  ? "Your HD CODE activation was declined. Please re-submit a valid proof of payment to unlock withdrawals."
+                  : "You must activate your HD CODE before you can withdraw. After approval, your HD CODE is sent to your email address."}
+            </p>
+            <Button onClick={() => navigate("/activate-bpc")} className="w-full">
+              Activate HD CODE
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/dashboard")} className="w-full">
+              Back to Dashboard
+            </Button>
+          </div>
         ) : (
           <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
             <div className="mb-4 p-3 rounded-xl bg-secondary">
