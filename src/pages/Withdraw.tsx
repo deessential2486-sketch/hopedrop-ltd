@@ -23,6 +23,8 @@ const Withdraw = () => {
   const [confirmed, setConfirmed] = useState(false);
 
   const [amount, setAmount] = useState("80000");
+  const [hdCode, setHdCode] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
