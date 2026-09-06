@@ -25,6 +25,10 @@ const Withdraw = () => {
 
   const [amount, setAmount] = useState("80000");
   const [hdCode, setHdCode] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [proofPath, setProofPath] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [proofError, setProofError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
