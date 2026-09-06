@@ -220,6 +220,68 @@ export type Database = {
           },
         ]
       }
+      support_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          sender_role: string
+          sender_user_id: string
+          thread_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          sender_role?: string
+          sender_user_id: string
+          thread_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          sender_role?: string
+          sender_user_id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "support_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_threads: {
+        Row: {
+          created_at: string
+          id: string
+          last_message_at: string
+          status: string
+          subject: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          status?: string
+          subject?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_message_at?: string
+          status?: string
+          subject?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
