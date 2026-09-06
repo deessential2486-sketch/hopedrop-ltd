@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "@/lib/router-compat";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +11,7 @@ import { listBanksFn, resolveAccountFn, checkHdCodeFn } from "@/lib/backend.func
 type Bank = { name: string; code: string };
 
 const Withdraw = () => {
-  const { user, loading } = useAuth();
+  const { user, supabaseUser, loading } = useAuth();
   const navigate = useNavigate();
 
   const [banks, setBanks] = useState<Bank[]>([]);
@@ -24,6 +25,10 @@ const Withdraw = () => {
 
   const [amount, setAmount] = useState("80000");
   const [hdCode, setHdCode] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
+  const [proofPath, setProofPath] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [proofError, setProofError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -82,6 +87,33 @@ const Withdraw = () => {
   const bankName = banks.find((b) => b.code === bankCode)?.name ?? "";
 
   const activated = user.status === "approved";
+
+  const handleProofChange = async (file: File | null) => {
+    setProofError("");
+    setProofPath("");
+    setProofFile(file);
+    if (!file || !supabaseUser) return;
+    if (!file.type.startsWith("image/")) {
+      setProofError("Please choose a photo (JPG or PNG).");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setProofError("That photo is larger than 10MB. Please choose a smaller one.");
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${supabaseUser.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("payment-proofs")
+      .upload(path, file, { cacheControl: "3600", upsert: false });
+    setUploading(false);
+    if (upErr) {
+      setProofError("Upload failed. Please try again.");
+      return;
+    }
+    setProofPath(path);
+  };
 
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -269,7 +301,34 @@ const Withdraw = () => {
                 </p>
               </div>
 
-              <Button type="submit" className="w-full" disabled={!confirmed || !hdCode || submitting}>
+              <div className="space-y-2">
+                <Label htmlFor="proof">Proof photo (optional)</Label>
+                <Input
+                  id="proof"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleProofChange(e.target.files?.[0] ?? null)}
+                  aria-describedby="proof-help"
+                />
+                <div aria-live="polite" className="min-h-[1rem]">
+                  {uploading && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" /> Uploading photo…
+                    </p>
+                  )}
+                  {!uploading && proofError && <p className="text-xs text-destructive">{proofError}</p>}
+                  {!uploading && proofPath && (
+                    <p className="text-xs text-foreground flex items-center gap-1.5">
+                      <CheckCircle2 className="w-3 h-3 text-primary" aria-hidden="true" /> {proofFile?.name} uploaded
+                    </p>
+                  )}
+                </div>
+                <p id="proof-help" className="text-xs text-muted-foreground">
+                  Attach a photo of your payment receipt if you have one. Only you can see it.
+                </p>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={!confirmed || !hdCode || submitting || uploading}>
                 {submitting ? "Checking HD CODE…" : `Withdraw ₦${Number(amount || 0).toLocaleString()}`}
               </Button>
 
