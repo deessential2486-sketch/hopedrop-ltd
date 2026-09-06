@@ -25,7 +25,11 @@ const Login = () => {
     const err = await login(email, password);
     setLoading(false);
     if (err) {
-      setError(err);
+      setError(
+        /invalid login credentials/i.test(err)
+          ? "No account found with that email and password. Please register first."
+          : err,
+      );
     } else {
       navigate("/dashboard");
     }
