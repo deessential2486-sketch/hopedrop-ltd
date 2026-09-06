@@ -88,6 +88,33 @@ const Withdraw = () => {
 
   const activated = user.status === "approved";
 
+  const handleProofChange = async (file: File | null) => {
+    setProofError("");
+    setProofPath("");
+    setProofFile(file);
+    if (!file || !supabaseUser) return;
+    if (!file.type.startsWith("image/")) {
+      setProofError("Please choose a photo (JPG or PNG).");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      setProofError("That photo is larger than 10MB. Please choose a smaller one.");
+      return;
+    }
+    setUploading(true);
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${supabaseUser.id}/${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("payment-proofs")
+      .upload(path, file, { cacheControl: "3600", upsert: false });
+    setUploading(false);
+    if (upErr) {
+      setProofError("Upload failed. Please try again.");
+      return;
+    }
+    setProofPath(path);
+  };
+
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
