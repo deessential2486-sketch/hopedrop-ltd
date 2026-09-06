@@ -11,7 +11,7 @@ import { listBanksFn, resolveAccountFn, checkHdCodeFn } from "@/lib/backend.func
 type Bank = { name: string; code: string };
 
 const Withdraw = () => {
-  const { user, loading } = useAuth();
+  const { user, supabaseUser, loading } = useAuth();
   const navigate = useNavigate();
 
   const [banks, setBanks] = useState<Bank[]>([]);
