@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.touch_support_thread() FROM PUBLIC, anon, authenticated;
