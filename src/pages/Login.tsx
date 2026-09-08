@@ -71,6 +71,13 @@ const Login = () => {
               <Link to="/register" className="text-primary font-medium hover:underline">Register</Link>
             </p>
           </div>
+
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            Support agent?{" "}
+            <Link to="/admin-login" className="text-primary font-medium hover:underline">
+              Agent sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>
