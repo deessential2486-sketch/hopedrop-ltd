@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivateBpcRouteImport } from './routes/activate-bpc'
+import { Route as AgentInboxRouteImport } from './routes/agent-inbox'
 import { Route as AirtimeRouteImport } from './routes/airtime'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DataRouteImport } from './routes/data'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -36,9 +38,19 @@ const ActivateBpcRoute = ActivateBpcRouteImport.update({
   path: '/activate-bpc',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgentInboxRoute = AgentInboxRouteImport.update({
+  id: '/agent-inbox',
+  path: '/agent-inbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AirtimeRoute = AirtimeRouteImport.update({
   id: '/airtime',
   path: '/airtime',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -110,7 +122,9 @@ const ApiPublicBpcAdminRoute = ApiPublicBpcAdminRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
+  '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
+  '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/data': typeof DataRoute
   '/faq': typeof FaqRoute
@@ -128,7 +142,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
+  '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
+  '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/data': typeof DataRoute
   '/faq': typeof FaqRoute
@@ -147,7 +163,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
+  '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
+  '/chat': typeof ChatRoute
   '/dashboard': typeof DashboardRoute
   '/data': typeof DataRoute
   '/faq': typeof FaqRoute
@@ -167,7 +185,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/activate-bpc'
+    | '/agent-inbox'
     | '/airtime'
+    | '/chat'
     | '/dashboard'
     | '/data'
     | '/faq'
@@ -185,7 +205,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/activate-bpc'
+    | '/agent-inbox'
     | '/airtime'
+    | '/chat'
     | '/dashboard'
     | '/data'
     | '/faq'
@@ -203,7 +225,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/activate-bpc'
+    | '/agent-inbox'
     | '/airtime'
+    | '/chat'
     | '/dashboard'
     | '/data'
     | '/faq'
@@ -222,7 +246,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActivateBpcRoute: typeof ActivateBpcRoute
+  AgentInboxRoute: typeof AgentInboxRoute
   AirtimeRoute: typeof AirtimeRoute
+  ChatRoute: typeof ChatRoute
   DashboardRoute: typeof DashboardRoute
   DataRoute: typeof DataRoute
   FaqRoute: typeof FaqRoute
@@ -254,11 +280,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ActivateBpcRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/agent-inbox': {
+      id: '/agent-inbox'
+      path: '/agent-inbox'
+      fullPath: '/agent-inbox'
+      preLoaderRoute: typeof AgentInboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/airtime': {
       id: '/airtime'
       path: '/airtime'
       fullPath: '/airtime'
       preLoaderRoute: typeof AirtimeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -358,7 +398,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ActivateBpcRoute: ActivateBpcRoute,
+  AgentInboxRoute: AgentInboxRoute,
   AirtimeRoute: AirtimeRoute,
+  ChatRoute: ChatRoute,
   DashboardRoute: DashboardRoute,
   DataRoute: DataRoute,
   FaqRoute: FaqRoute,

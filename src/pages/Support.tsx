@@ -26,6 +26,18 @@ const Support = () => {
           <p className="text-sm text-muted-foreground">Our support team is available 24/7 to assist you with any issues.</p>
         </div>
 
+        <button onClick={() => navigate("/chat")} className="block w-full text-left">
+          <div className="bg-card rounded-2xl p-4 shadow-sm border border-border flex items-center gap-4 hover:border-primary/30 transition-colors">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <MessageCircle className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">Live Chat</p>
+              <p className="text-xs text-muted-foreground">Chat now with a support agent</p>
+            </div>
+          </div>
+        </button>
+
         <a href="mailto:binaceolivia@gmail.com" className="block">
           <div className="bg-card rounded-2xl p-4 shadow-sm border border-border flex items-center gap-4 hover:border-primary/30 transition-colors">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
