@@ -222,6 +222,10 @@ export type Database = {
       }
       support_messages: {
         Row: {
+          attachment_name: string | null
+          attachment_path: string | null
+          attachment_size: number | null
+          attachment_type: string | null
           body: string
           created_at: string
           id: string
@@ -230,7 +234,11 @@ export type Database = {
           thread_id: string
         }
         Insert: {
-          body: string
+          attachment_name?: string | null
+          attachment_path?: string | null
+          attachment_size?: number | null
+          attachment_type?: string | null
+          body?: string
           created_at?: string
           id?: string
           sender_role?: string
@@ -238,6 +246,10 @@ export type Database = {
           thread_id: string
         }
         Update: {
+          attachment_name?: string | null
+          attachment_path?: string | null
+          attachment_size?: number | null
+          attachment_type?: string | null
           body?: string
           created_at?: string
           id?: string
