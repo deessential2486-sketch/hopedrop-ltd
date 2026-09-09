@@ -169,32 +169,32 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
     setPreviewUrl(f.type.startsWith("image/") ? URL.createObjectURL(f) : "");
   };
 
-  const uploadFile = (f: File): Promise<{ path: string } | { error: string }> =>
-    new Promise(async (resolve) => {
-      const { data: sess } = await supabase.auth.getSession();
-      const token = sess.session?.access_token;
-      const base = import.meta.env["VITE_SUPABASE_URL"];
-      const key = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
-      if (!token || !base) return resolve({ error: "You are signed out. Please sign in again." });
+  const uploadFile = async (f: File): Promise<{ path: string } | { error: string }> => {
+    const ext = f.name.split(".").pop()?.toLowerCase() ?? "bin";
+    const path = `${threadId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
-      const ext = f.name.split(".").pop()?.toLowerCase() ?? "bin";
-      const path = `${threadId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", `${base}/storage/v1/object/chat-attachments/${path}`);
-      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-      if (key) xhr.setRequestHeader("apikey", key);
-      xhr.setRequestHeader("x-upsert", "false");
-      if (f.type) xhr.setRequestHeader("Content-Type", f.type);
-      xhr.upload.onprogress = (e) => {
-        if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
-      };
-      xhr.onerror = () => resolve({ error: "Upload failed. Please check your connection and try again." });
-      xhr.onload = () => {
-        if (xhr.status >= 200 && xhr.status < 300) resolve({ path });
-        else resolve({ error: "Upload failed. Please try again." });
-      };
-      xhr.send(f);
-    });
+    setProgress(10);
+    const tick = setInterval(() => {
+      setProgress((p) => (p === null ? p : Math.min(90, p + 10)));
+    }, 300);
+
+    const { error } = await supabase.storage
+      .from("chat-attachments")
+      .upload(path, f, {
+        cacheControl: "3600",
+        upsert: false,
+        contentType: f.type || "application/octet-stream",
+      });
+
+    clearInterval(tick);
+    if (error) {
+      console.error("[chat] upload failed", error);
+      return { error: `Upload failed: ${error.message}` };
+    }
+    setProgress(100);
+    return { path };
+  };
+
 
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
