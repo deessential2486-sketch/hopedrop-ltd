@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, Paperclip, X, FileText, Download } from "lucide-react";
 
 export interface ChatMessage {
   id: string;
@@ -12,7 +12,81 @@ export interface ChatMessage {
   sender_role: string;
   body: string;
   created_at: string;
+  attachment_path?: string | null;
+  attachment_name?: string | null;
+  attachment_type?: string | null;
+  attachment_size?: number | null;
 }
+
+const MAX_BYTES = 10 * 1024 * 1024;
+const ACCEPT =
+  "image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain";
+
+const ALLOWED_EXT = ["jpg", "jpeg", "png", "gif", "webp", "heic", "pdf", "doc", "docx", "txt"];
+
+const prettySize = (n?: number | null) => {
+  if (!n) return "";
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${Math.round(n / 1024)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+};
+
+const AttachmentView = ({ msg }: { msg: ChatMessage }) => {
+  const [url, setUrl] = useState<string>("");
+  const path = msg.attachment_path;
+
+  useEffect(() => {
+    let active = true;
+    if (!path) return;
+    supabase.storage
+      .from("chat-attachments")
+      .createSignedUrl(path, 60 * 60)
+      .then(({ data }) => {
+        if (active && data?.signedUrl) setUrl(data.signedUrl);
+      });
+    return () => {
+      active = false;
+    };
+  }, [path]);
+
+  if (!path) return null;
+  const isImage = (msg.attachment_type ?? "").startsWith("image/");
+
+  if (isImage) {
+    return url ? (
+      <a href={url} target="_blank" rel="noreferrer" className="block mt-1">
+        <img
+          src={url}
+          alt={msg.attachment_name ?? "Attachment"}
+          className="rounded-xl max-h-56 w-auto object-cover"
+          loading="lazy"
+        />
+      </a>
+    ) : (
+      <div className="mt-1 h-24 w-40 rounded-xl bg-background/30 flex items-center justify-center">
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <a
+      href={url || undefined}
+      target="_blank"
+      rel="noreferrer"
+      className="mt-1 flex items-center gap-2 rounded-xl bg-background/25 px-2 py-2 max-w-[240px]"
+    >
+      <FileText className="w-5 h-5 shrink-0" />
+      <span className="min-w-0">
+        <span className="block text-xs font-medium truncate">{msg.attachment_name ?? "File"}</span>
+        <span className="block text-[10px] opacity-70">
+          {(msg.attachment_name?.split(".").pop() ?? "file").toUpperCase()} · {prettySize(msg.attachment_size)}
+        </span>
+      </span>
+      <Download className="w-4 h-4 shrink-0 opacity-70" />
+    </a>
+  );
+};
 
 const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean }) => {
   const { supabaseUser } = useAuth();
@@ -21,8 +95,12 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [progress, setProgress] = useState<number | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const scroll = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -66,12 +144,89 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
     inputRef.current?.focus();
   }, [threadId]);
 
+  const clearFile = () => {
+    setFile(null);
+    setPreviewUrl((u) => {
+      if (u) URL.revokeObjectURL(u);
+      return "";
+    });
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const pickFile = (f: File | null) => {
+    setError("");
+    if (!f) return;
+    const ext = f.name.split(".").pop()?.toLowerCase() ?? "";
+    if (!ALLOWED_EXT.includes(ext)) {
+      setError("You can send photos, PDF, Word documents or text files.");
+      return;
+    }
+    if (f.size > MAX_BYTES) {
+      setError("That file is larger than 10MB. Please choose a smaller one.");
+      return;
+    }
+    setFile(f);
+    setPreviewUrl(f.type.startsWith("image/") ? URL.createObjectURL(f) : "");
+  };
+
+  const uploadFile = (f: File): Promise<{ path: string } | { error: string }> =>
+    new Promise(async (resolve) => {
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      const base = import.meta.env["VITE_SUPABASE_URL"];
+      const key = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+      if (!token || !base) return resolve({ error: "You are signed out. Please sign in again." });
+
+      const ext = f.name.split(".").pop()?.toLowerCase() ?? "bin";
+      const path = `${threadId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `${base}/storage/v1/object/chat-attachments/${path}`);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      if (key) xhr.setRequestHeader("apikey", key);
+      xhr.setRequestHeader("x-upsert", "false");
+      if (f.type) xhr.setRequestHeader("Content-Type", f.type);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) setProgress(Math.round((e.loaded / e.total) * 100));
+      };
+      xhr.onerror = () => resolve({ error: "Upload failed. Please check your connection and try again." });
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve({ path });
+        else resolve({ error: "Upload failed. Please try again." });
+      };
+      xhr.send(f);
+    });
+
   const send = async (e: React.FormEvent) => {
     e.preventDefault();
     const body = text.trim();
-    if (!body || !supabaseUser) return;
+    if ((!body && !file) || !supabaseUser) return;
     setSending(true);
     setError("");
+
+    let attachment: {
+      attachment_path: string;
+      attachment_name: string;
+      attachment_type: string;
+      attachment_size: number;
+    } | null = null;
+
+    if (file) {
+      setProgress(0);
+      const res = await uploadFile(file);
+      setProgress(null);
+      if ("error" in res) {
+        setError(res.error);
+        setSending(false);
+        return;
+      }
+      attachment = {
+        attachment_path: res.path,
+        attachment_name: file.name,
+        attachment_type: file.type || "application/octet-stream",
+        attachment_size: file.size,
+      };
+    }
+
     const { data, error: err } = await supabase
       .from("support_messages")
       .insert({
@@ -79,6 +234,7 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
         sender_user_id: supabaseUser.id,
         sender_role: asAgent ? "agent" : "customer",
         body,
+        ...(attachment ?? {}),
       })
       .select()
       .single();
@@ -88,6 +244,7 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
       return;
     }
     setText("");
+    clearFile();
     if (data) {
       const msg = data as ChatMessage;
       setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
@@ -124,7 +281,8 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
                       {m.sender_role === "agent" ? "Support agent" : "Customer"}
                     </p>
                   )}
-                  <p className="whitespace-pre-wrap break-words">{m.body}</p>
+                  {m.body && <p className="whitespace-pre-wrap break-words">{m.body}</p>}
+                  <AttachmentView msg={m} />
                   <p className="text-[10px] opacity-60 mt-1">
                     {new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                   </p>
@@ -138,7 +296,53 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
 
       <form onSubmit={send} className="border-t border-border p-3 space-y-2">
         {error && <p className="text-xs text-destructive">{error}</p>}
+
+        {file && (
+          <div className="flex items-center gap-2 rounded-xl border border-border p-2">
+            {previewUrl ? (
+              <img src={previewUrl} alt="Selected" className="w-12 h-12 rounded-lg object-cover" />
+            ) : (
+              <FileText className="w-8 h-8 text-primary" />
+            )}
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-medium truncate text-foreground">{file.name}</p>
+              <p className="text-[10px] text-muted-foreground">{prettySize(file.size)}</p>
+              {progress !== null && (
+                <div className="mt-1 h-1.5 w-full rounded-full bg-secondary overflow-hidden">
+                  <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
+                </div>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={clearFile}
+              className="text-muted-foreground"
+              aria-label="Remove attachment"
+              disabled={sending}
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         <div className="flex items-center gap-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept={ACCEPT}
+            className="hidden"
+            onChange={(e) => pickFile(e.target.files?.[0] ?? null)}
+          />
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            onClick={() => fileRef.current?.click()}
+            disabled={sending}
+            aria-label="Attach a photo or file"
+          >
+            <Paperclip className="w-4 h-4" />
+          </Button>
           <Input
             ref={inputRef}
             value={text}
@@ -146,7 +350,12 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
             placeholder="Type your message…"
             aria-label="Message"
           />
-          <Button type="submit" size="icon" disabled={!text.trim() || sending} aria-label="Send message">
+          <Button
+            type="submit"
+            size="icon"
+            disabled={(!text.trim() && !file) || sending}
+            aria-label="Send message"
+          >
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
           </Button>
         </div>
