@@ -103,13 +103,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
         setSupabaseUser(session.user);
-        fetchProfile(session.user.id, session.user.email || "");
+        await fetchProfile(session.user.id, session.user.email || "");
       }
       setLoading(false);
     });
+
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSupabaseUser(session?.user || null);

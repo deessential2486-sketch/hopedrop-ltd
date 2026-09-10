@@ -178,13 +178,20 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
       setProgress((p) => (p === null ? p : Math.min(90, p + 10)));
     }, 300);
 
-    const { error } = await supabase.storage
-      .from("chat-attachments")
-      .upload(path, f, {
+    const attempt = async () =>
+      supabase.storage.from("chat-attachments").upload(path, f, {
         cacheControl: "3600",
         upsert: false,
         contentType: f.type || "application/octet-stream",
       });
+
+    let { error } = await attempt();
+
+    // A stale/expired session is the usual cause of an upload rejection: refresh once and retry.
+    if (error) {
+      const { data } = await supabase.auth.refreshSession();
+      if (data?.session) ({ error } = await attempt());
+    }
 
     clearInterval(tick);
     if (error) {
@@ -194,6 +201,7 @@ const ChatRoom = ({ threadId, asAgent }: { threadId: string; asAgent: boolean })
     setProgress(100);
     return { path };
   };
+
 
 
   const send = async (e: React.FormEvent) => {
