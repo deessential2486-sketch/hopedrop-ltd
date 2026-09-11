@@ -112,6 +112,9 @@ const HopeDropLanding = () => {
           {" or "}
           <Link to="/support" className="text-[#F5C518] hover:underline font-medium">contact support</Link>
         </p>
+        <p className="mt-3 text-xs text-muted-foreground">
+          <Link to="/terms" className="hover:underline font-medium">Terms &amp; Conditions</Link>
+        </p>
       </footer>
     </div>
   );

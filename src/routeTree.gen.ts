@@ -26,6 +26,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ReferralsRouteImport } from './routes/referrals'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as WithdrawRouteImport } from './routes/withdraw'
 import { Route as ApiPublicBpcAdminRouteImport } from './routes/api/public/bpc-admin'
 
@@ -114,6 +115,11 @@ const SupportRoute = SupportRouteImport.update({
   path: '/support',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const WithdrawRoute = WithdrawRouteImport.update({
   id: '/withdraw',
   path: '/withdraw',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/withdraw': typeof WithdrawRoute
   '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/withdraw': typeof WithdrawRoute
   '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/referrals': typeof ReferralsRoute
   '/register': typeof RegisterRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/withdraw': typeof WithdrawRoute
   '/api/public/bpc-admin': typeof ApiPublicBpcAdminRoute
 }
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/referrals'
     | '/register'
     | '/support'
+    | '/terms'
     | '/withdraw'
     | '/api/public/bpc-admin'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/referrals'
     | '/register'
     | '/support'
+    | '/terms'
     | '/withdraw'
     | '/api/public/bpc-admin'
   id:
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/referrals'
     | '/register'
     | '/support'
+    | '/terms'
     | '/withdraw'
     | '/api/public/bpc-admin'
   fileRoutesById: FileRoutesById
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   ReferralsRoute: typeof ReferralsRoute
   RegisterRoute: typeof RegisterRoute
   SupportRoute: typeof SupportRoute
+  TermsRoute: typeof TermsRoute
   WithdrawRoute: typeof WithdrawRoute
   ApiPublicBpcAdminRoute: typeof ApiPublicBpcAdminRoute
 }
@@ -398,6 +411,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SupportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/withdraw': {
       id: '/withdraw'
       path: '/withdraw'
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReferralsRoute: ReferralsRoute,
   RegisterRoute: RegisterRoute,
   SupportRoute: SupportRoute,
+  TermsRoute: TermsRoute,
   WithdrawRoute: WithdrawRoute,
   ApiPublicBpcAdminRoute: ApiPublicBpcAdminRoute,
 }
