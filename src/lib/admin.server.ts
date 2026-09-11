@@ -82,6 +82,8 @@ export async function deleteCustomer(
   if (targetUserId === adminId) throw new Error("You cannot delete your own account");
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
+  await supabaseAdmin.from("support_threads").delete().eq("user_id", targetUserId);
+
   const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
   if (error) throw new Error(error.message);
   return { ok: true };
