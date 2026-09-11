@@ -91,7 +91,12 @@ const Register = () => {
             </Button>
           </form>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            By creating an account you agree to our{" "}
+            <Link to="/terms" className="text-primary font-medium hover:underline">Terms &amp; Conditions</Link>.
+          </p>
+
+          <p className="mt-3 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
             <Link to="/login" className="text-primary font-medium hover:underline">Sign In</Link>
           </p>
