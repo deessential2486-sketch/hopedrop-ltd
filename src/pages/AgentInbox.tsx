@@ -117,6 +117,14 @@ const AgentInbox = () => {
           </button>
           <Inbox className="w-5 h-5 text-primary-foreground" />
           <span className="text-lg font-bold text-primary-foreground">Agent Inbox</span>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="ml-auto"
+            onClick={() => navigate("/agent-customers")}
+          >
+            Customers
+          </Button>
         </div>
       </header>
 

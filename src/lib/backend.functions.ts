@@ -60,3 +60,29 @@ export const checkHdCodeFn = createServerFn({ method: "POST" })
     const { checkHdCode } = await import("./hdcode.server");
     return checkHdCode(context.userId, data.code);
   });
+
+export const adminListCustomersFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { listCustomers } = await import("./admin.server");
+    return listCustomers(context.supabase as any, context.userId);
+  });
+
+export const adminSetCustomerBlockedFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { userId: string; blocked: boolean }) => ({
+    userId: String(data?.userId ?? ""),
+    blocked: data?.blocked === true,
+  }))
+  .handler(async ({ data, context }) => {
+    const { setCustomerBlocked } = await import("./admin.server");
+    return setCustomerBlocked(context.supabase as any, context.userId, data.userId, data.blocked);
+  });
+
+export const adminDeleteCustomerFn = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { userId: string }) => ({ userId: String(data?.userId ?? "") }))
+  .handler(async ({ data, context }) => {
+    const { deleteCustomer } = await import("./admin.server");
+    return deleteCustomer(context.supabase as any, context.userId, data.userId);
+  });

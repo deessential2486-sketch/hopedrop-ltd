@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ActivateBpcRouteImport } from './routes/activate-bpc'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
+import { Route as AgentCustomersRouteImport } from './routes/agent-customers'
 import { Route as AgentInboxRouteImport } from './routes/agent-inbox'
 import { Route as AirtimeRouteImport } from './routes/airtime'
 import { Route as ChatRouteImport } from './routes/chat'
@@ -43,6 +44,11 @@ const ActivateBpcRoute = ActivateBpcRouteImport.update({
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/admin-login',
   path: '/admin-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentCustomersRoute = AgentCustomersRouteImport.update({
+  id: '/agent-customers',
+  path: '/agent-customers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgentInboxRoute = AgentInboxRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
   '/admin-login': typeof AdminLoginRoute
+  '/agent-customers': typeof AgentCustomersRoute
   '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
   '/chat': typeof ChatRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
   '/admin-login': typeof AdminLoginRoute
+  '/agent-customers': typeof AgentCustomersRoute
   '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
   '/chat': typeof ChatRoute
@@ -180,6 +188,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/activate-bpc': typeof ActivateBpcRoute
   '/admin-login': typeof AdminLoginRoute
+  '/agent-customers': typeof AgentCustomersRoute
   '/agent-inbox': typeof AgentInboxRoute
   '/airtime': typeof AirtimeRoute
   '/chat': typeof ChatRoute
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate-bpc'
     | '/admin-login'
+    | '/agent-customers'
     | '/agent-inbox'
     | '/airtime'
     | '/chat'
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate-bpc'
     | '/admin-login'
+    | '/agent-customers'
     | '/agent-inbox'
     | '/airtime'
     | '/chat'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate-bpc'
     | '/admin-login'
+    | '/agent-customers'
     | '/agent-inbox'
     | '/airtime'
     | '/chat'
@@ -271,6 +283,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ActivateBpcRoute: typeof ActivateBpcRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AgentCustomersRoute: typeof AgentCustomersRoute
   AgentInboxRoute: typeof AgentInboxRoute
   AirtimeRoute: typeof AirtimeRoute
   ChatRoute: typeof ChatRoute
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       path: '/admin-login'
       fullPath: '/admin-login'
       preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agent-customers': {
+      id: '/agent-customers'
+      path: '/agent-customers'
+      fullPath: '/agent-customers'
+      preLoaderRoute: typeof AgentCustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agent-inbox': {
@@ -439,6 +459,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ActivateBpcRoute: ActivateBpcRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AgentCustomersRoute: AgentCustomersRoute,
   AgentInboxRoute: AgentInboxRoute,
   AirtimeRoute: AirtimeRoute,
   ChatRoute: ChatRoute,
