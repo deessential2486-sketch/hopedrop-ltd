@@ -107,6 +107,7 @@ export type Database = {
       profiles: {
         Row: {
           balance: number
+          blocked: boolean
           bvn_verification_status: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at: string | null
           created_at: string
@@ -126,6 +127,7 @@ export type Database = {
         }
         Insert: {
           balance?: number
+          blocked?: boolean
           bvn_verification_status?: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at?: string | null
           created_at?: string
@@ -145,6 +147,7 @@ export type Database = {
         }
         Update: {
           balance?: number
+          blocked?: boolean
           bvn_verification_status?: Database["public"]["Enums"]["kyc_status"]
           bvn_verified_at?: string | null
           created_at?: string
